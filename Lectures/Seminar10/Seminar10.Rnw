@@ -1,0 +1,93 @@
+\documentclass{beamer}
+\usetheme{Stats}
+\setbeamercovered{transparent}
+\usepackage{color}
+\usepackage{hyperref}
+  \hypersetup{
+  	colorlinks=true
+		linkcolor=black
+		}
+\usepackage{url}
+\usepackage{graphics}
+\usepackage{tikz}
+\usepackage{booktabs}
+
+<<ParentGlobalOpts, echo=FALSE>>=
+  options(width=50)
+  opts_chunk$set(fig.align='center')
+@
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Title Slide %%%%%%%%%%%%%%%%%%%%%%%%%%
+\title[]{Intro to Social Science Data Analysis \\[1cm] Seminar 10: Comparing Proportions \& Simple Linear Regression}
+\author[]{
+    \href{mailto:gandrud@yonsei.ac.kr}{Christopher Gandrud}
+}
+\date{\today}
+
+
+\begin{document}
+
+\frame{\titlepage}
+
+\frame{
+  \frametitle{A Win for R}
+  \begin{center}
+    \includegraphics[scale=0.70]{math.png}
+  \end{center}
+{\tiny{Source: \url{http://xkcd.com/1131/}}}
+
+}
+
+\begin{frame}[fragile]
+  \frametitle{Data}
+  Load UK Smoking Data from the {\emph{openintro}} package:
+<<LoadData, message=FALSE>>=
+# Load package
+library(openintro)
+
+# Load Data
+data(smoking)
+@
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Frequency Table}
+  Create a One-way Contingency Table for Smoking Status
+<<FreqTable, message=FALSE>>=
+# Load package
+library(MASS)
+
+# Create Table
+SmokingTable <- table(smoking$smoke)
+@
+\end{frame}
+
+\frame{
+  \frametitle{Question}
+  If 27\% of South Korean's smoke, are the proportions of smokers and non-smokers different in the UK than in South Korea?
+}
+
+\frame{
+  \frametitle{Independence}
+  Determine if UK smokers are different than non-smokers in terms of their:
+  \begin{itemize}
+    \item highest educational qualification,
+    \item nationality,
+    \item gross income,
+    \item ethnicity.
+  \end{itemize}\\[0.5cm]
+  If they are different, describe the differences.
+}
+
+
+\frame{
+	\frametitle{Two-way Relationships}
+  Download data on 4 variables from the World Bank. \\[0.5cm]
+  Graphically describe the relationships between these variables, including using linear regression lines.
+
+}
+
+
+
+\end{document}

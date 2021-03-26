@@ -1,0 +1,637 @@
+\documentclass{beamer}
+\usetheme{Stats}
+\setbeamercovered{transparent}
+\usepackage{color}
+\usepackage{hyperref}
+  \hypersetup{
+  	colorlinks=true
+		linkcolor=black
+		}
+\usepackage{url}
+\usepackage{graphics}
+\usepackage{tikz}
+\usepackage{booktabs}
+
+<<ParentGlobalOpts, echo=FALSE>>=
+  options(width=50)
+  opts_chunk$set(fig.align='center')
+@
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Title Slide %%%%%%%%%%%%%%%%%%%%%%%%%%
+\title[]{Intro to Social Science Data Analysis \\[1cm] Lecture 6: Data Visualisation in R}
+\author[]{
+    \href{mailto:gandrud@yonsei.ac.kr}{Christopher Gandrud}
+}
+\date{\today}
+
+
+\begin{document}
+
+\frame{\titlepage}
+
+\section[Outline]{}
+\frame{\tableofcontents}
+
+\section{Assignment 2}
+\frame{
+  \frametitle{Assignment 2}
+  \textbf{Due:} Friday 19 October \\[0.25cm]
+  
+  \textbf{Describe} at least \textbf{3} variables in a data set.\\[0.25cm]
+  {\small{
+    You need to select a \textbf{range of descriptive statistical tools}. The tools should include both \textbf{numerical descriptive statistics} and \textbf{graphics}.\\[0.25cm]
+
+    These tools should describe the variables':
+    \begin{itemize}
+      \item<1-> central tendency,
+      \item<1-> variation,
+      \item<1-> their relationships with the other variables.
+    \end{itemize}
+
+    The descriptions need to be discussed \textbf{in paragraph form}. \\[0.25cm]
+
+    The description must be \textbf{reproducible}. So you should email me the link to a Dropbox folder with:
+    \begin{itemize}
+      \item<1-> the \texttt{.csv} data set,
+      \item<1-> the \texttt{.Rmd} R markdown file,
+      \item<1-> the final \texttt{.html} file.
+    \end{itemize}
+  }}
+}
+
+\section{Recap}
+\frame{
+	\frametitle{Quick Quiz (1)}
+  {\Large{When you describe data, what {\bf{two}} things do you always need to discuss? \\[0.5cm]
+  
+  Why do you need to describe both things? \\[0.5cm]
+  
+  Give examples for data at different measurement levels.
+  }}
+}
+
+\frame{
+  \frametitle{Quick Quiz (2)}
+  {\Large{What is the difference between the {\bf{population}} mean and the {\bf{sampling}} mean? \\[1cm]
+  Why would you log transform a variable?
+  }}
+}
+
+\frame{
+  \frametitle{Today}
+  {\Large{Last week: we largely learned how to describe our data {\emph{numerically}}. \\[0.5cm]
+  {\bf{Today}}: we will learn how to present our data with {\emph{graphics}}. \\[0.5cm]
+  We will learn both how to create graphics in R and the principles of effective statistical graphics.
+  }}
+}
+
+\frame{
+  \frametitle{Inferential Statistics}
+  {\Large{Many of the things we learn today will also apply to presenting inferential statistics.}}
+}
+
+\frame{
+  \frametitle{}
+  {\Large{The first part of this lecture is based on Tufte (2001). \\[0.5cm]
+  Many of the examples are from the Junk Charts Blog (\url{http://junkcharts.typepad.com/}). \\[0.5cm]
+  We will also use the World Bank data we downloaded last class. \\[0.25cm]
+  R Source Code at: \url{http://bit.ly/OTWEGS}
+  }}
+<<DataDownload, echo=FALSE, message=FALSE>>=
+# Load package
+library(devtools)
+# Gather data using source code at:
+# http://bit.ly/OTWEGS
+# Data is stored in a data frame: MortalityGDP
+source_url("http://bit.ly/OTWEGS")
+
+# Create data with no missing values of infant mortali
+InfantNoMiss <- subset(MortalityGDP,
+                           !is.na(InfantMortality))
+
+# Create High/Low Income Variable
+InfantNoMiss$DumMort[InfantNoMiss$InfantMortality
+                     >= 15] <- "high"
+InfantNoMiss$DumMort[InfantNoMiss$InfantMortality
+                     < 15] <- "low"
+@
+}
+
+%%%%%%%%%%%%%%%%% Principles of Graphical Excellence %%%%%%%%%%%%%
+\section{Principles of Graphics Excellence}
+\frame{
+  \frametitle{Why Graphics?}
+  \begin{center}
+  {\Large{Why use graphics? Why not just describe all of our data in tables?}}
+  \end{center}
+}
+
+\begin{frame}[fragile,plain]
+<<DataTableDump, tidy=FALSE>>=
+# Create data frame with GDP/Capita & Infant Mort.
+DataDump <- InfantNoMiss[, 
+              c("GDPperCapita", "InfantMortality")]
+
+# Show data
+DataDump
+@
+\end{frame}
+
+\begin{frame}[fragile,plain]
+<<SimpleScatter,echo=FALSE, fig.height=5, tidy=FALSE, warning=FALSE>>=
+# Load package
+library(ggplot2)
+
+# Rescale GDP/Capita in Thousands
+DataDumpRescale <- DataDump
+DataDumpRescale$GDPperCapita <- DataDumpRescale$GDPperCapita/1000
+
+# Create plot of GDP/Capita & Infant Mort.
+ggplot(data = DataDumpRescale, aes(x = InfantMortality, y = GDPperCapita)) +
+        geom_point(colour = "#E34A33") +
+        xlab("\n Infant Mortality Rate Per 1000 Births") +
+        ylab("GDP/Capita \n (1,000s of Current US$)\n") +
+        theme_bw(base_size = 16)
+@
+\end{frame}
+
+\frame{
+  \frametitle{Tufte's Principles}
+  {\LARGE{Goal of Statistical Graphics:}} \\[0.5cm]
+  \begin{center}
+    {\Large{The efficient communication of complex quantitative ideas.}}
+  \end{center}
+}
+
+\frame{
+  \frametitle{Tufte's Principles}
+  {\LARGE{Tufte's Principles for Excellent Statistical Graphics (2001, 13) (a selection):}} \\[0.25cm]
+  \begin{itemize}
+    \item show the data
+    \item encourage the eye to compare differences in the data
+    \item serve a clear purpose
+    \item avoid distorting the data
+    \item be closely integrated with the text
+  \end{itemize}
+}
+
+\frame{
+  \frametitle{}
+  \begin{center}
+  {\LARGE{Show the Data \\[1cm]
+  Encourage the eye to compare differences. \\[1cm]
+  Serve a purpose.}}
+  \end{center}
+}
+
+\frame{
+  \frametitle{Show the data}
+  {\Large{Show the data, not other things like silly graphics, or unnecessary words.}} \\[0.5cm]
+  Have high {\bf{data ink}} ratio.
+  \begin{equation}
+    \mathrm{Data\:Ink\:Ratio = \frac{data-ink}{total\:ink}}
+  \end{equation}
+}
+
+\frame{
+  \frametitle{}
+  \begin{center}
+  {\LARGE{Example}}
+  \end{center}
+}
+
+\frame{
+  \frametitle{Encourage the Eye to Compare Differences}
+  {\Large{How did the budgets change?}} \\
+  \begin{center}
+    (Orange is 2013, Blue is 2012) \\
+    \includegraphics[scale=0.6]{figure/SpendingChange.png}
+  \end{center}
+}
+
+\begin{frame}[fragile]
+  \frametitle{A Little Better}
+<<CreateSpendingComp, echo=FALSE>>=
+# Recreate data
+Dept <- c("Research", "Research", "Industry", "Industry", "Infrastructure", "Infrastructure", "Food", "Food") 
+years <- c(2012, 2013, 2012, 2013, 2012, 2013, 2012, 2013)
+Spending <- c(16, 16.9, 15.1, 15.7, 23.1, 23.9, 18.1, 18.3)
+
+SpendingData <- data.frame(Dept, years, Spending)
+
+@
+
+<<SpendingGraph, echo=FALSE, fig.height=5>>=
+ggplot(SpendingData, aes(x = years, y = Spending, group = Dept, color = Dept)) +
+        geom_line(size=7) +
+        xlab("") + ylab("Trillion Won\n") +
+        scale_x_continuous(breaks = c(2012, 2013)) +
+        theme_bw(base_size = 16)
+        
+@
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Even Better}
+<<PercentChangeSpending, echo=FALSE>>=
+# Create percent spending change data
+Dept2 <- c("Research", "Industry", "Infrastructure", "Food")
+SpendChange <- c(5.6, 3.97, 3.46, 1.1)
+ChangeData <- data.frame(Dept2, SpendChange)
+@
+
+<<SpendPerChange, echo=FALSE, fig.height=5>>=
+ggplot(ChangeData, aes(x = Dept2, y = SpendChange)) +
+        geom_point(size = 7, color = "#FDBB84") +
+        scale_y_continuous(limits = c(0, 10), breaks = c(0, 5, 10), labels = c(0, 5, 10)) +
+        xlab("") + ylab("% Change\n") + 
+        ggtitle("Percentage Change in Departmental Spending\n\n 2012 to 2013\n") +
+        theme_bw(base_size = 16)
+@
+\end{frame}
+
+
+\frame{
+  \frametitle{}
+  \begin{center}
+  {\LARGE{Avoid distorting the data.}} \\[1cm]
+  Special case: Circles.
+  \end{center}
+}
+
+\frame{
+  \frametitle{Avoid Circles! (1)}
+  \begin{center}
+  {\Large{In general: Avoid using the {\emph{size}} of a circle to mean something!}}
+  \end{center} \\[0.5cm]
+  This includes avoiding:
+  \begin{itemize}
+    \item Bubble charts
+    \item Pie charts
+  \end{itemize}
+}
+
+\frame{
+    \frametitle{Avoid Circles! (2)}
+    {\Large{Why?}} \\[0.5cm]
+    Circles can distort data.
+    \begin{itemize}
+      \item It is very difficult to compare their size
+      \item The Ebbinghause Illusion!
+    \end{itemize}
+}
+
+\frame{
+  \frametitle{}
+  Order the 4 circles from largest to smallest. \\[0.25cm]
+  The circles are on a scale of 0-100, so how much bigger are each of the circles relative to each other? \\[0.25cm]
+  \begin{center}
+    \includegraphics[scale=0.6]{figure/CirclesCompare.png}
+  \end{center}
+}
+
+\begin{frame}[fragile]
+  Order the 4 bars from largest to smallest. \\[0.25cm]
+  How much bigger are each of the circles relative to each other? \\[0.25cm]
+
+<<CreateCirclesComp, echo=FALSE>>=
+# Recreate Circles Data
+Names <- c("Email", "Driver's License", "Credit Score", "Phone Number")
+Numbers <- c(46, 62, 57, 58)
+
+CircComp <- data.frame(Names, Numbers, stringsAsFactors = FALSE)
+@
+
+<<GraphCirclesComp, echo=FALSE, fig.height=4>>= 
+# Create bar chart with circles data
+ggplot(data = CircComp, aes(reorder(Names, Numbers), Numbers)) +
+        geom_point(color = "#DE2D26", size = 7, shape = 3) +
+        scale_y_continuous(limits = c(0, 100)) +
+        ylab("") + xlab("") +
+        theme_bw(base_size = 16)
+@
+\end{frame}
+
+\frame{
+  \frametitle{}
+  {\Large{The circles basically tell you nothing that a simple table could do better.}}
+  \begin{center}
+    \includegraphics[scale=0.6]{figure/CirclesCompareNumbers.png}
+  \end{center}
+}
+
+\frame{
+  \frametitle{Ebbinghause Illusion}
+  {\Large{Which circle is bigger?}}
+  \includegraphics[scale=0.6]{figure/Ebbinghause.png}
+}
+
+\frame{
+  \frametitle{Avoid Distorting Data}
+  \begin{center}
+    {\LARGE{Colours and Data Distortions}} \\[0.5cm]
+    Special Case 2.
+  \end{center}
+}
+
+\frame{
+  \frametitle{Colour \& Context Illusions}
+{\Large{Which square is darkest?}}
+  \begin{center}
+    \includegraphics[scale=0.5]{figure/ColourContext.png}
+  \end{center}
+}
+
+\frame{
+  \frametitle{Colour Principles}
+  {\Large{{\bf{Only}} give graphical features (e.g. bars in a bar chart) different colours if it {\bf{means something}} in the data.}} \\[0.5cm]
+  See: Stephen Few \url{http://www.perceptualedge.com/articles/visual_business_intelligence/rules_for_using_color.pdf}
+}
+
+\frame{
+  \frametitle{Colour Principles}
+  {\Large{Colours should be used to:}} \\[0.5cm]
+  \begin{itemize}
+    \item highlight particular data,
+    \item group items,
+    \item encode quantitative values.    
+  \end{itemize}
+}
+
+\frame{
+  \frametitle{Bad}
+  \begin{center}
+    \includegraphics[scale=0.5]{figure/BadColourBar.png}
+  \end{center}
+}
+
+\frame{
+  \frametitle{Good}
+  \begin{center}
+    \includegraphics[scale=0.5]{figure/GoodColourBar.png}
+  \end{center}
+}
+
+\frame{
+  \frametitle{Another Issue with Colours}
+  \begin{center}
+    {\LARGE{Colour blindness.}}
+  \end{center}
+}
+
+\frame{
+  \frametitle{Be colour blind friendly.}
+  {\LARGE{ Colour blindness:}} \\[0.5cm]
+  People who are colour blind can have difficulty distinguishing between red-green and blue-yellow. \\[0.25cm]
+  About 5-8\% of men are colour blind. \\[0.25cm]
+  We need to choose colour schemes for our graphics that are {\bf{colour blind friendly}}.\\[0.25cm]
+  For more information see \url{http://www.usability.gov/articles/newsletter/pubs/022010new.html}.
+}
+
+\frame{
+  \frametitle{Warning}
+  {\LARGE{Remember:}} \\[0.5cm]
+  {\Large{Graphics are only as good as what you put in them. \\[0.5cm]
+  Silly data and statistics will always create silly graphs.}}
+}
+
+%%%%%%%%%%%%%%%%% Base R Graphics %%%%%%%%%%%%%
+\section{Base R Graphics}
+\frame{
+  \frametitle{Base R Graphics}
+  \begin{center}
+    {\LARGE{Base R Graphics}}
+  \end{center}
+}
+
+\frame{
+  \frametitle{Base R Graphics}
+  {\Large{Last week we saw that R has some basic graphics functions like:
+  \begin{itemize}
+    \item \texttt{plot}
+    \item \texttt{histogram}
+    \item \texttt{boxplot}
+  \end{itemize}  
+  }}
+}
+
+\begin{frame}[fragile]
+  \frametitle{A Basic Scatter Plot}
+<<BasicPlot, fig.height=4, tidy=FALSE>>=
+# Create a basic scatter plot
+with(MortalityGDP,
+     plot(x = InfantMortality, y = GDPperCapita))
+@
+\end{frame}
+
+\begin{frame}[fragile,plain]
+<<BasicPlotLabel, fig.height=3, tidy=FALSE>>=
+# Basic scatter: axis labels & rescale GDP/Capita
+with(MortalityGDP,
+     plot(x = InfantMortality, 
+          y = (GDPperCapita/1000),
+          xlab = "Infant Mortality per 1000 Births",
+          ylab = "GDP/Capita (1,000s of US$)",
+          main = 
+          "Scatterplot of\n GDP/Capita & Infant Mort."))
+@
+\end{frame}
+  
+
+%%%%%%%%%%%%%%%%% Graphics with ggplot2 %%%%%%%%%%%%%
+\section{ggplot2}
+\frame{
+  \frametitle{Graphics with gglot2}
+  \begin{center}
+    {\LARGE{Graphics with ggplot2}}
+  \end{center}
+}
+
+\frame{
+  \frametitle{Why ggplot2?}
+  {\LARGE{The ggplot2 package}} \\[0.5cm]
+  {\Large{The ggplot2 package allows us to do much more than base R graphics. \\[0.5cm]
+  }} 
+}
+
+\frame{
+  \frametitle{What is ggplot2?}
+  {\Large{``gg" means ``Grammar of Graphics"}} \\[0.25cm]
+  (2 just means it is the second one) \\[0.3cm]
+  \hline\\[0.3cm]
+  Each plot is made of {\bf{layers}}. Layers include the coordinate system (x-y), points, labels, etc. \\[0.25cm]
+  Each layer has {\bf{aesthetics}} (\texttt{aes}) including the x \& y, size, shape, and colour.\\[0.25cm]
+  The main layer types are called {\bf{geometrics}} (\texttt{geom}). These include lines, points, density plots, bars, and text. 
+}
+
+\begin{frame}[fragile]
+  \frametitle{Simple Example}
+<<ggScatterSimple, warning=FALSE, tidy=FALSE, fig.height=3>>=
+# Scatterplot
+ggplot(data = MortalityGDP, aes(x = InfantMortality, 
+                                y = GDPperCapita)) +
+      geom_point()
+
+@
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Simple Example with Blank Theme}
+<<ggScatterSimpleBlank, warning=FALSE, tidy=FALSE, fig.height=3>>=
+# Scatterplot
+ggplot(data = MortalityGDP, aes(x = InfantMortality, 
+                                y = GDPperCapita)) +
+      geom_point() +
+      theme_bw(base_size = 13)
+
+@
+\end{frame}
+
+\frame{
+  \frametitle{Colours! (1)}
+  {\LARGE{Colours}} \\[0.5cm]
+  There are a number of ways to specify colours in ggplot2. \\[0.25cm]
+  The simplest way is to let ggplot choose the colours for you.
+}
+
+\begin{frame}[fragile,plain]
+<<ScatterColour1, tidy=FALSE, warning=FALSE, fig.height=4>>= 
+# Create scatter plot divided by region
+ggplot(data = InfantNoMiss, aes(log(InfantMortality),
+                                log(GDPperCapita))) +
+      geom_point(aes(colour = income)) + 
+      theme_bw()
+@
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Colors! (2)}
+  There are many ways to pick specific colors. \\[0.5cm]
+  In this class we will mainly use {\bf{hexadecimal}} colours. \\[0,25cm]
+  This is probably the most commonly used system for choosing colours on the web.\\[0.5cm]
+  {\bf{Every}} colour is given six digits. \\[0.25cm]
+  A good website for getting hexadecimal colour schemes is: \url{http://colorbrewer2.org/}.
+\end{frame}
+
+\begin{frame}[fragile,plain]
+<<HexColorScatterCode, tidy=FALSE, fig.keep='none', warning=FALSE>>=
+# Create colour vector
+Colours <- c("#1B9E77", "#D95F02", "#7570B3", 
+             "#E7298A", "#66A61E", "#E6AB02")
+
+# Create graph
+ColourScatter <- ggplot(data = InfantNoMiss, 
+                        aes(log(InfantMortality),
+                            log(GDPperCapita))) +
+                  geom_point(aes(colour = income)) + 
+                  scale_color_manual(values = Colours) +
+                  xlab("\nLog Infant Mortality") +
+                  ylab("Log GDP/Capita\n") +
+                  ggtitle("Log Transformed Data\n") +
+                  theme_bw()
+@
+\end{frame}
+
+\begin{frame}[fragile,plain]
+<<HexColoursScatter, warning=FALSE, fig.height=4>>=
+# Show scatter plot
+ColourScatter
+
+@
+\end{frame}
+
+\begin{frame}[fragile]
+<<ViolinPlot, tidy=FALSE, fig.keep='none', warning=FALSE>>=
+# Create a violin Plot
+Violin <- ggplot(InfantNoMiss, aes(
+                                factor(DumMort),
+                                log(GDPperCapita))) +
+                  geom_violin(fill = "#E7298A",
+                              colour = "#E7298A",
+                              alpha = I(0.5)) +
+                  geom_jitter(color = "#7570B3") +
+                  xlab("\n Infant Mortality") +
+                  ylab("Log GDP.Capital\n") +
+                  theme_bw(base_size = 16)
+
+@
+\end{frame}
+
+\begin{frame}[fragile]
+<<ViolinPlotShow, tidy=FALSE, fig.height=5, warning=FALSE>>=
+# Create a violin Plot
+Violin
+@
+\end{frame}
+
+\frame{
+  \frametitle{Much More ggplot2 Info}
+  {\LARGE{More Information:}} \\[1cm]
+  \begin{center}
+    \url{http://docs.ggplot2.org/current/index.html}
+  \end{center}
+}
+
+%%%%%%%%%%%%%%%%% Graphics with GoogleVis %%%%%%%%%%%%%
+\section{googleVis}
+\frame{
+  \frametitle{Maps with googleVis}
+  \begin{center}
+    {\LARGE{Maps with googleVis}}
+  \end{center}
+}
+
+\frame{
+  \frametitle{Maps with ggplot2}
+  \begin{center}
+  \begin{figure}
+    \caption{RStudio Downloads (1 Month in 2012)}
+    \includegraphics[scale=0.35]{figure/RStudioUse.png} \\
+    {\tiny{Source: \url{http://blog.rstudio.org/2012/10/01/where-in-the-world/#comments}}}
+  \end{figure}
+  \end{center}
+}
+
+\frame{
+  \frametitle{The googleVis Package}
+  {\LARGE{googleVis}} \\[0.5cm]
+  We can create HTML based graphics with GoogleVis. \\[0.5cm]
+  HTML graphics can be {\bf{interactive}}. \\[0.5cm]
+  This includes {\bf{motion charts}} \& {\bf{maps}}.
+}
+
+\frame{
+  \frametitle{Map Example}
+
+}
+
+\frame{
+  \frametitle{More googleVis Information}
+  {\LARGE{More Information:}} \\[1cm]
+  \begin{center}
+    {\bf{Class Example (all files):}} \url{http://bit.ly/WdeMAw} \\[0.5cm]
+    {\bf{googleVis Info:}} \url{http://code.google.com/p/google-motion-charts-with-r/}
+  \end{center}
+}
+
+
+\frame{
+  \frametitle{Professional Graphics With R}
+  {\Large{Many people use R to create professional graphics. \\[0.5cm]
+  For example: see the New York Times' graphics blog: \url{http://chartsnthings.tumblr.com/} \\[0.5cm]
+  They often use R in combination with Adobe Illustrator. \\[0.5cm]
+  See Nathan Yau's Book {\emph{Visualize This: The Flowing Data Guide to Design, Visualization, and Statistics}} (\url{http://book.flowingdata.com/}).
+  }}
+}
+
+%%%%%%%% References
+\begin{frame}[allowframebreaks]
+  \frametitle{References}
+  Tufte, Edward R. 2001. The Visual Display of Quantitative Information. Cheshire, Connecticut: Graphics Press.
+ \\[0.25cm]
+ 
+\end{frame}
+
+
+\end{document}

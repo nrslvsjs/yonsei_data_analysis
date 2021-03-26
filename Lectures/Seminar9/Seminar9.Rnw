@@ -1,0 +1,86 @@
+\documentclass{beamer}
+\usetheme{Stats}
+\setbeamercovered{transparent}
+\usepackage{color}
+\usepackage{hyperref}
+  \hypersetup{
+  	colorlinks=true
+		linkcolor=black
+		}
+\usepackage{url}
+\usepackage{graphics}
+\usepackage{tikz}
+\usepackage{booktabs}
+
+<<ParentGlobalOpts, echo=FALSE>>=
+  options(width=50)
+  opts_chunk$set(fig.align='center')
+@
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Title Slide %%%%%%%%%%%%%%%%%%%%%%%%%%
+\title[]{Intro to Social Science Data Analysis \\[1cm] Seminar 9: Overview of Statistical Inference (II)}
+\author[]{
+    \href{mailto:gandrud@yonsei.ac.kr}{Christopher Gandrud}
+}
+\date{\today}
+
+
+\begin{document}
+
+\frame{\titlepage}
+
+\begin{frame}[fragile]
+  \frametitle{Download Data from OpenIntro}
+<<Download, tidy=FALSE, eval=FALSE>>=
+library(openintro)
+
+data(satGPA)
+@
+
+<<Download2, tidy=FALSE, eval=FALSE>>=
+# To see a variable descriptions type:
+?satGPA
+@
+\end{frame}
+
+\frame{
+  \frametitle{Hypothesis Tests}
+  Pick 3 continuous variables and formulate null and alternative hypotheses for testing whether the sample is representative of the population.
+}
+
+\frame{
+  \frametitle{Hypothesis Tests}
+  Test these hypotheses with 95\% and 99\% confidence intervals.
+}
+
+\frame{
+  \frametitle{Hypothesis Tests}
+  Test these hypotheses using p-values at the 95\% and 99\% significance levels.
+}
+
+\frame{
+  \frametitle{Hypothesis Tests}
+  How do the results from the p-value tests correspond to the confidence interval tests?
+}
+
+\frame{
+  \frametitle{Subset}
+  Subset one of your variables by the variable \texttt{sex}.\\[0.5cm]
+  It has the values \texttt{1} and \texttt{2}.
+}
+
+\frame{
+  \frametitle{Subset}
+  Is there a significant difference in the mean value of the variable for \texttt{SATV} and \texttt{SATM} in the two groups of \texttt{sex}?
+}
+
+
+
+
+
+
+
+
+
+\end{document}

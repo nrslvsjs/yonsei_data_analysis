@@ -1,0 +1,341 @@
+\documentclass{beamer}
+\usetheme{Stats}
+\setbeamercovered{transparent}
+\usepackage{color}
+\usepackage{hyperref}
+  \hypersetup{
+  	colorlinks=true
+		linkcolor=black
+		}
+\usepackage{url}
+\usepackage{graphics}
+\usepackage{tikz}
+\usepackage{booktabs}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Title Slide %%%%%%%%%%%%%%%%%%%%%%%%%%
+\title[Seminar 1]{Intro to Social Science Data Analysis \\[1cm] Seminar 1: Introduction to R and RStudio \\[0.25cm]}
+\author[]{
+    \href{mailto:gandrud@yonsei.ac.kr}{Christopher Gandrud}
+}
+\date{\today}
+
+
+\begin{document}
+
+\frame{\titlepage}
+
+\section[Outline]{}
+\frame{\tableofcontents}
+
+\section{What is the seminar for?}
+\frame{
+  \frametitle{Seminar Purpose (1)}
+  \begin{itemize}
+    \item<1->  This course is about learning skills that will help you {\bf{gather}}, {\bf{analyse}}, and {\bf{present}} social science data.
+    \item<2-> The best way to develop these skills is by {\bf{using}} them.
+    \item<3-> The seminar is an opportunity for you to {\bf{practice}} using these tools. Here you can:
+      \begin{itemize}
+        \item<4-> Ask me questions,
+        \item<5-> Collaborate with your fellow students.
+      \end{itemize}
+  \end{itemize}
+}
+
+\frame{
+  \frametitle{Format (1)}
+    \begin{itemize}
+      \item<1-> In the lecture \& seminar I will give you {\bf{general tools}}.
+      \item<2-> In the seminar I will give you a {\bf{goal}} to complete with these tools (and others).
+    \end{itemize}
+}
+
+\frame{
+  \frametitle{Format (2)}
+    {\LARGE{Note: There is {\bf{rarely only one correct answer}}.}} \\[0.5cm]
+    
+    {\LARGE{I want you to {\bf{creatively}} use the tools and resources available to you.}} \\[0.5cm]
+    
+    {\LARGE{I do not want you to just copy a list of instructions.}}
+}
+
+\section{Getting Started with RStudio}
+\frame{
+  \frametitle{Getting Started with RStudio}
+    \begin{center}
+      {\LARGE{Open Rstudio}} \\[0.5cm]
+      \includegraphics{images/RStudioIcon.png}
+    \end{center}
+}
+
+\frame{
+  \frametitle{Looking Around}
+  {\LARGE{Look around the main Panel.}} \\[0.5cm]
+    \begin{itemize}
+      \item {\bf{Console}}: Where you can enter R code.
+      \item {\bf{Workspace/History}}: Where you can see your objects and the history of commands.
+      \item {\bf{Files/Plots/Packages/Help}}: Navigate files, see the graphs you make and your packages, read help files.
+    \end{itemize}
+}
+
+\frame{
+  \frametitle{Source Files}
+  {\LARGE{Create a new {\bf{source code}} file:}} \\[0.5cm]
+    \begin{itemize}
+      \item<1-> Click: {\tt{File}} \rightarrow {\tt{New}} \rightarrow {\tt{R\: Script}}
+      \item<2-> Usually write your R code here and {\bf{save your source files} to Dropbox}.
+      \item<3-> This will make your life a {\bf{lot easier}}.
+    \end{itemize}
+}
+
+\frame{
+  \frametitle{Source Files}
+  {\LARGE{Create a new {\bf{notebook}}:}} \\[0.5cm]
+    \begin{itemize}
+      \item<1-> Notebooks allow you to record {\bf{what}} you do and {\bf{how}} you do it.
+      \item<2-> When you have you source code file open, click: {\tt{File}} \rightarrow {\tt{Compile\: Notebook \ldots}} 
+      \item<3-> Compile a notebook when you are finished.
+      \item<4-> We will do more of this in Week 4.
+    \end{itemize}
+}
+
+\begin{frame}[fragile]
+  \frametitle{Commenting}
+  {\bf{Hint:}} You can make your code easier to read by {\bf{regularly commenting}} on it. \\[0.5cm]
+      Use the {\tt{\#}} (hash). For example,
+<<CommentExample, results='asis'>>=
+# This is a comment
+@
+\end{frame}
+
+\section{Getting Started with R}
+\frame{
+  \frametitle{The Basics: Objects (1)}
+  {\LARGE{Objects}} \\[0.5cm]
+  \begin{itemize}
+    \item<1-> R is a computer {\bf{language}}, mostly used for statistical analysis.
+      \begin{itemize}
+        \item<1-> The rules for writing the R language is called its {\bf{syntax}}.
+      \end{itemize}
+    \item<2-> R is an {\emph{object-oriented language}}.
+    \item<3-> {\bf{Objects}} are like R's nouns: they are {\bf{things}}.
+  \end{itemize}
+}
+
+\begin{frame}[fragile]
+  \frametitle{The Basics: Objects (2)}
+  {\LARGE{For example:}}
+
+<<ObjectEx, results='asis'>>=
+# Add 2 + 2
+
+2 + 2
+
+# Put the answer of 2 + 2 in an object
+# called Answer
+
+Answer <- 2 + 2
+@
+\end{frame}
+
+\frame{
+  \frametitle{Assignemt}
+  The {\tt{<-}} is the {\bf{assignment operator}} it assigns something to an object.
+}
+
+\frame{
+  \frametitle{Tasks 1}
+  Create {\bf{5}} different objects. Explore their properties. \\[0.5cm]
+  
+  What can you put into an object? \\[0.5cm]
+  
+  What could you not put into an object?
+}
+
+\begin{frame}[fragile]
+  \frametitle{Basic Object Modes}
+      {\LARGE{Basic Object Modes}} \\[0.5cm]
+      All objects have a {\bf{mode}} (sometimes called data type or class). \\[0.5cm]
+      Very basic object types are {\bf{numeric}}, {\bf{character strings}}, and {\bf{logical}} (TRUE or FALSE). \\[0.25cm]
+      Use the \texttt{class} command to find out what an object's class is. For example:
+
+<<ClassExample>>=
+class(Answer)          
+@
+\end{frame}
+
+\frame{
+  \frametitle{Basic Object Types}
+  {\LARGE{Basic Object Types}} \\[0.5cm]
+  \begin{itemize}
+    \item<1-> The main type of object we will use in this class is called a {\bf{data frame}}.
+        \begin{itemize}
+          \item<1-> We will cover data frames in detail next class. \\[0.5cm]
+        \end{itemize}
+      \item<2-> Today, lets look at some more basic R objects:
+        \begin{itemize}
+          \item<3-> Vectors
+          \item<4-> Matrices
+        \end{itemize}
+    \end{itemize}
+}
+
+\frame{
+  \frametitle{Vectors}
+  {\LARGE{Vectors}} \\[0.5cm]
+  Vectors are objects with multiple numbers {\emph{or}} character strings in a particular order. \\[0.5cm]
+  They are the ``workhorse" of R (Matloff 2011).
+}
+
+\begin{frame}[fragile,plain]
+
+<<VectorsExamples>>=
+# A vector of a sequence of numbers
+Sequence <- 1:10
+Sequence
+
+# Non-sequntial numbers
+NonSeq <- c(1, 30, 53)
+NonSeq
+
+# A character string vector
+CharVector <- c("Christopher", "John", "Gandrud")
+CharVector
+@
+\end{frame}
+
+\frame{
+  \frametitle{Combine Values Into a Vector}
+    {\LARGE{\texttt{c}}} \\[0.5cm]
+    The \texttt{c} command combines values into a vector.
+}
+
+\frame{
+  \frametitle{Matrices 1}
+  {\LARGE{Matrices}} \\[0.5cm]
+  Matrices are like vectors, except they have {\bf{multiple columns}}. \\[0.5cm]
+  You may remember matrices from math class:
+  \[
+ \begin{bmatrix}
+  a & b & c \\
+  d & e & f \\
+  g & h & i
+ \end{bmatrix}
+\]
+  {\bf{Don't worry}}, we never need to do matrix math in this class. R does it for us!
+}
+
+\frame{
+  \frametitle{Matrices 2}
+  We can use the \texttt{cbind} function (Column Bind) to combine two of the vectors we created before. 
+}
+
+\begin{frame}[fragile,plain]
+<<Cbind>>=
+# Bind the CharVector and NonSeq objects
+NewMatrix <- cbind(CharVector, NonSeq)
+
+# Display contents of NewMatrix
+NewMatrix
+@
+\end{frame}
+
+\frame{
+  \frametitle{Tasks 3}
+  Create a:
+    \begin{itemize}
+      \item Numeric vector
+      \item Character vector
+      \item Character matrix
+      \item Numeric matrix
+    \end{itemize}
+}
+
+\frame{
+  \frametitle{Commands, Functions, Arguments (1)}
+  {\LARGE{Commands \& Functions}} \\[0.5cm]
+  Commands and Functions tell R to {\bf{do something}}. \\
+  Usually they do something to an object.
+  They are like R's {\bf{verbs}}.
+}
+
+\begin{frame}[fragile]
+  \frametitle{Commands, Functions, Arguments (2)}
+  {\LARGE{For example:}} \\[0.5cm]
+  Lets create a set of 7 numbers: 1, 2, 3, 4, 6, 6, 7:
+
+<<FiveNumbers, results='asis'>>=
+  Numbers <- c(1, 2, 3, 4, 6, 6, 7)
+@
+
+Now lets take the mean (average) of these 5 numbers with the {\tt{mean}} command
+
+<<FiveMean, results='asis'>>=
+NumbersMean <- mean(Numbers)
+
+NumbersMean
+@
+\end{frame}
+
+\frame{
+  \frametitle{Commands, Functions, Arguments (1)}
+  {\LARGE{Arguments}} \\[0.5cm]
+  Arguments modify the command.
+}
+
+\begin{frame}[fragile]
+  \frametitle{Commands, Functions, Arguments (2)}
+  {\LARGE{For example:}} \\[0.5cm]
+  Find what arguments the {\tt{round}} command can take by typing:
+<<HelpRound, eval=FALSE, tidy=FALSE>>=
+?round
+@
+
+  This gives us the {\bf{help file}} for the {\tt{round}} command. \\[0.25cm]
+
+  We can see that one argument is {\tt{digits}} which specifies the number of decimal places to round to. \\ [0.25cm]
+
+  To add the {\tt{digits}} argument just use the {\tt{=}} like this:
+
+<<MeanDigits, results='asis'>>=
+round(NumbersMean, digits = 1)
+@
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Nesting Commands}
+  You can {\bf{nest}} commands inside of one another \\[0.5cm]
+  This can sometimes make your code shorter.
+<<NestExample>>=
+# Find Numbers' mean and round it to one decimal place
+round(mean(Numbers), digits = 1)
+@
+\end{frame}
+
+\frame{
+  \frametitle{Tasks 3}
+  Find and use {\bf{2}} other commands. (Hint: \texttt{library(help = "base")} or \texttt{library(help = "graphics")}) \\[0.25cm]
+  Explore their properties. \\[0.5cm]
+}
+
+\frame{
+  \frametitle{Installing New Functions}
+  {\LARGE{Installing New Functions}} \\[0.5cm]
+  One of R's great strengths is that there are thousands of free, open source add-on packages that let you greatly expand what you can do in R. \\[0.25cm]
+  To {\bf{install}} these packages use the \texttt{install.packages} command. \\[0.25cm]
+  Once the package is installed you can {\bf{load it}} in your R session with the \texttt{library} function.
+}
+
+\frame{
+  \frametitle{Tasks 4}
+  Install and load the {\emph{WDI}} package.
+}
+
+\frame{
+  \frametitle{Syllabus Change}
+  Please check the online version of the syllabus. \\[0.5cm]
+  I made a small change to the readings for the next two weeks.
+
+}
+
+\end{document}
